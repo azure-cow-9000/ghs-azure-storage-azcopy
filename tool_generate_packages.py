@@ -16,8 +16,8 @@ DEFAULT_SOURCE_FOLDER = "./"
 THIRD_PARTY_NOTICE_FILE_NAME = "ThirdPartyNotice.txt"
 
 # the list of executables to package are listed here
-EXECUTABLES_TO_ZIP = ["azcopy_darwin_amd64", "azcopy_windows_386.exe", "azcopy_windows_amd64.exe"]
-EXECUTABLES_TO_TAR = ["azcopy_linux_amd64"]
+EXECUTABLES_TO_ZIP = ["azcopy_windows_386.exe", "azcopy_windows_amd64.exe"]
+EXECUTABLES_TO_TAR = []
 
 
 def create_directory(dir):
@@ -74,10 +74,11 @@ if __name__ == "__main__":
         copy_file(os.path.join(args.input_folder, executable), output_folder_path)
 
         # rename executables to the standard name
-        rename_file(os.path.join(output_folder_path, executable), os.path.join(output_folder_path, "azcopy.exe" if ".exe" in executable else "azcopy"))
+        # default location on dev machine is ${repository}\ghs-azure-storage-azcopy\dist\
+        rename_file(os.path.join(output_folder_path, executable), os.path.join(output_folder_path, "azcopy.exe" if ".exe" in executable else "azcopy")) # run this file
 
         # copy the third party notice over
-        copy_file(os.path.join(args.input_folder, THIRD_PARTY_NOTICE_FILE_NAME), output_folder_path)
+        #copy_file(os.path.join(args.input_folder, THIRD_PARTY_NOTICE_FILE_NAME), output_folder_path)
 
         # compress the folder accordingly
         if executable in EXECUTABLES_TO_TAR:

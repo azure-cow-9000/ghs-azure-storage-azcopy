@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Azure/azure-storage-azcopy/v10/jobsAdmin"
 	"log"
 	"net/url"
 	"os"
@@ -14,6 +13,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Azure/azure-storage-azcopy/v10/jobsAdmin"
 
 	"github.com/Azure/azure-pipeline-go/pipeline"
 
@@ -276,7 +277,7 @@ func (cca *CookedCopyCmdArgs) initEnumerator(jobPartOrder common.CopyJobPartOrde
 		}
 
 		srcRelPath := cca.MakeEscapedRelativePath(true, isDestDir, cca.asSubdir, object)
-		dstRelPath := cca.MakeEscapedRelativePath(false, isDestDir, cca.asSubdir, object)
+		dstRelPath := strings.ToLower(cca.MakeEscapedRelativePath(false, isDestDir, cca.asSubdir, object))
 
 		transfer, shouldSendToSte := object.ToNewCopyTransfer(
 			cca.autoDecompress && cca.FromTo.IsDownload(),

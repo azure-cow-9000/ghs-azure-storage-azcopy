@@ -26,7 +26,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Azure/azure-storage-azcopy/v10/jobsAdmin"
 	"io"
 	"math"
 	"net/url"
@@ -35,6 +34,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/Azure/azure-storage-azcopy/v10/jobsAdmin"
 
 	"github.com/Azure/azure-pipeline-go/pipeline"
 
@@ -285,13 +286,13 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 		cooked.isHNStoHNS = srcDfs && dstDfs
 	}
 
-	fromTo, err := ValidateFromTo(raw.src, raw.dst, raw.fromTo) // TODO: src/dst
+	fromTo, err := ValidateFromTo(raw.src, strings.ToLower(raw.dst), raw.fromTo) // TODO: src/dst
 	if err != nil {
 		return cooked, err
 	}
 
 	var tempSrc string
-	tempDest := ToLower(raw.dst) // Set path to lowercase for blob storage name matching (GHS - MCW)
+	tempDest := strings.ToLower(raw.dst) // Set path to lowercase for blob storage name matching (GHS - MCW)
 
 	if strings.EqualFold(tempDest, common.Dev_Null) && runtime.GOOS == "windows" {
 		tempDest = common.Dev_Null // map all capitalization of "NUL"/"nul" to one because (on Windows) they all mean the same thing
@@ -319,7 +320,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 		return cooked, err
 	}
 
-	cooked.Destination, err = SplitResourceString(tempDest, ToLower(fromTo.To()))
+	cooked.Destination, err = SplitResourceString(tempDest, fromTo.To())
 	if err != nil {
 		return cooked, err
 	}
@@ -415,7 +416,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 			// empty strings should be ignored, otherwise the source root itself is selected
 			if len(v) > 0 {
 				raw.warnIfHasWildcard(includeWarningOncer, paramName, v)
-				listChan <- v
+				listChan <- strings.ToLower(v)
 			}
 		}
 
@@ -453,7 +454,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 					headerLineNum++
 				}
 
-				addToChannel(v, "list-of-files")
+				addToChannel(strings.ToLower(v), "list-of-files")
 			}
 		}
 

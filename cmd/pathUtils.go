@@ -190,7 +190,7 @@ func SplitResourceString(raw string, loc common.Location) (common.ResourceString
 	}
 	main, query := splitQueryFromSaslessResource(sasless, loc)
 	return common.ResourceString{
-		Value:      main,
+		Value:      strings.ToLower(main),
 		SAS:        sas,
 		ExtraQuery: query,
 	}, nil
