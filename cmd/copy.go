@@ -291,7 +291,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 	}
 
 	var tempSrc string
-	tempDest := raw.dst
+	tempDest := ToLower(raw.dst) // Set path to lowercase for blob storage name matching (GHS - MCW)
 
 	if strings.EqualFold(tempDest, common.Dev_Null) && runtime.GOOS == "windows" {
 		tempDest = common.Dev_Null // map all capitalization of "NUL"/"nul" to one because (on Windows) they all mean the same thing
@@ -319,7 +319,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 		return cooked, err
 	}
 
-	cooked.Destination, err = SplitResourceString(tempDest, fromTo.To())
+	cooked.Destination, err = SplitResourceString(tempDest, ToLower(fromTo.To()))
 	if err != nil {
 		return cooked, err
 	}
