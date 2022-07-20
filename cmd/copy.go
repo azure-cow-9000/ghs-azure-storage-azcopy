@@ -454,7 +454,7 @@ func (raw rawCopyCmdArgs) cook() (CookedCopyCmdArgs, error) {
 					headerLineNum++
 				}
 
-				addToChannel(strings.ToLower(v), "list-of-files")
+				addToChannel(v, "list-of-files")
 			}
 		}
 
